@@ -172,7 +172,7 @@ app_ui = ui.page_sidebar(
 
     ui.output_plot("monthly_plot"),
 
-    ui.p("Download as a comma-delimited file (CSV), Metric units only"),
+    ui.p("Download as a comma-delimited file (CSV), Metric units only (Temp: °C; Precip: mm)"),
 
     ui.download_button(id = "annual_download_btn", 
                        label = "Download Annual Data (CSV)"),
