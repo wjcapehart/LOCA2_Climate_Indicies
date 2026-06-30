@@ -2,7 +2,8 @@
 Mean Temperature,"ds.tas.resample(time=""MS"").mean(dim=""time"")",tasavg,°C,Average Temperature
 Total Precipitation, xclim.indices.precip_accumulation,pr,mm,Total Precipitation
 Simple Precip Intensity Index (SPII),xclim.indicators.atmos.daily_pr_intensity,sdii,mm/dy,Simple Daily Intensity Index (SDII) or average precipitation for days with daily precipitation over 1 mm.
-Dry Spell Frequency,xclim.indicators.atmos.dry_spell_frequency,dry_spell_frequency,# of periods,"The number of dry periods of 5 day or more, during which the total precipitation on a window of 5 day(s) is below 1 mm"
+Dry Spell Frequency,xclim.indicators.atmos.dry_spell_frequency,dry_spell_frequency,# of periods,"The number of dry periods of 5 day or more, during which the total precipitation on a window of 3 day(s) is below 1 mm"
+Wet Spell Frequency,xclim.indicators.atmos.wet_spell_frequency,wet_spell_frequency,# of periods,"The number of wet periods of 5 day or more, during which the total precipitation on a window of 3 day(s) is above 1 mm"
 Heat Wave Frequency,xclim.indicators.atmos.heat_wave_frequency,heat_wave_frequency,# of periods,"The number of heat wave events within a given period. A heat wave occurs when daily minimum and maximum temperatures exceed 22 °C and 30 °C, respectively, over at least 3 days."
 Heat Wave Frequency Max Length,xclim.indicators.atmos.heat_wave_max_length,heat_wave_max_length,days,"The maximum length of heat wave events occurring within a given period. A heat wave occurs when daily minimum and maximum temperatures exceed 22 °C and 30 °C, respectively, over at least 3 days."
 Heat Wave Frequency Total Length,xclim.indicators.atmos.heat_wave_total_length,heat_wave_total_length,days,"The total length of heat wave events occurring within a given period. A heat wave occurs when daily minimum and maximum temperatures exceed 22 °C and 30 °C, respectively, over at least 3 days."

@@ -405,7 +405,12 @@ def server(input, output, session):
 
         elif (input.selected_index() == "Dry Spell Frequency"):   
             
-            index_y = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=5, freq="YS")
+            index_y = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=3, freq="YS")
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
+
+        elif (input.selected_index() == "Wet Spell Frequency"):   
+            
+            index_y = xclim.indicators.atmos.wet_spell_frequency(loca2_daily()["pr"], window=3, freq="YS")
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
         elif (input.selected_index() == "Heat Wave Frequency"):   
@@ -601,8 +606,13 @@ def server(input, output, session):
 
         elif (input.selected_index() == "Dry Spell Frequency"):   
             
-            index_m = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=5, freq="MS")
+            index_m = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=3, freq="MS")
             index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+        elif (input.selected_index() == "Wet Spell Frequency"):   
+            
+            index_m = xclim.indicators.atmos.wet_spell_frequency(loca2_daily()["pr"], window=3, freq="MS")
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
 
         elif (input.selected_index() == "Heat Wave Frequency"):   
             
