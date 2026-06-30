@@ -18,7 +18,7 @@ import cftime            as cftime
 import io
 import urllib.request
 import socket
-
+from   xclim.core.calendar import percentile_doy, resample_doy
 
 
 from   shiny.types   import ImgData
@@ -127,6 +127,11 @@ SSP_Colors_dict     = dict(zip(SSP_Scenarios,SSP_Colors))
 # Time Periods for Historical and Future Extraction
 #
 
+# Wetting Rain Threshold
+
+wetting_rain_threshold = 1 / 86400.
+
+
 # Past Period
 
 historical_period        = [1981, 2010]
@@ -195,12 +200,10 @@ app_ui = ui.page_sidebar(
 
         ui.p("All plots are made to order from raw inputs and subsequent calculations. Please be patient."),
         ui.p("New indicies are also slowly being added."),
-
     ),
 
     ui.br(),
 
- 
     ui.card(
       ui.card_header("Annual Time Series Plot"),
       ui.output_plot("annual_plot"),
@@ -452,10 +455,103 @@ def server(input, output, session):
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
 
+        elif (input.selected_index() == "Wetting Rain Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            index_y = xclim.indicators.atmos.days_over_precip_doy_thresh(pr=loca2_daily()["pr"], 
+                                                                     pr_per=pr_per,  
+                                                                     thresh='1 mm/day',  
+                                                                     freq='YS',  
+                                                                     bootstrap=False,  
+                                                                     op='>')
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
+
+        elif (input.selected_index() == "Cold and Dry Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_y = xclim.indicators.atmos.cold_and_dry_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='YS')
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
 
 
+        elif (input.selected_index() == "Cold and Wet Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_y = xclim.indicators.atmos.cold_and_wet_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='YS')
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
 
 
+        elif (input.selected_index() == "Warm and Dry Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_y = xclim.indicators.atmos.warm_and_dry_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='YS')
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
+
+
+        elif (input.selected_index() == "Warm and Wet Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_y = xclim.indicators.atmos.warm_and_wet_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='YS')
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
 
 
         index_y["time"] = index_y.indexes['time'].to_datetimeindex(time_unit='us')
@@ -553,6 +649,101 @@ def server(input, output, session):
                                                                       tasmax = loca2_daily()["tasmax"],
                                                                       freq   =        'MS')
             index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+        elif (input.selected_index() == "Wetting Rain Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            index_m = xclim.indicators.atmos.days_over_precip_doy_thresh(pr=loca2_daily()["pr"], 
+                                                                     pr_per=pr_per,  
+                                                                     thresh='1 mm/day',  
+                                                                     freq='MS',  
+                                                                     bootstrap=False,  
+                                                                     op='>')
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+        elif (input.selected_index() == "Cold and Dry Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_m = xclim.indicators.atmos.cold_and_dry_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='MS')
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+        elif (input.selected_index() == "Cold and Wet Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_m = xclim.indicators.atmos.cold_and_wet_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='MS')
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+        elif (input.selected_index() == "Warm and Dry Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=5)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_m = xclim.indicators.atmos.warm_and_dry_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='MS')
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+        elif (input.selected_index() == "Warm and Wet Days"):   
+            baseline  = loca2_daily()["pr"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            pr_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            pr_per, _ = xr.broadcast(pr_per, loca2_daily()["pr"])
+            pr_per    = pr_per[:,:,:,0].drop_vars(["time"])
+            baseline  = loca2_daily()["tasavg"].sel(time=slice("1981", "2010"))
+            baseline  = baseline[:,0,:]
+            baseline  = baseline.where(baseline >= wetting_rain_threshold)
+            tas_per    = xclim.core.calendar.percentile_doy(baseline, window=5, per=95)[:,:,0]
+            tas_per, _ = xr.broadcast(tas_per, loca2_daily()["tasavg"])
+            tas_per    = tas_per[:,:,:,0].drop_vars(["time"])
+            index_m = xclim.indicators.atmos.warm_and_wet_days(tas=loca2_daily()["tasavg"], 
+                                                               pr=loca2_daily()["pr"], 
+                                                               tas_per=tas_per, 
+                                                               pr_per=pr_per, 
+                                                               freq='MS')
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
 
         index_m["time"] = index_m.indexes['time'].to_datetimeindex(time_unit='us')
 
