@@ -408,10 +408,35 @@ def server(input, output, session):
             index_y = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=3, freq="YS")
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
+        elif (input.selected_index() == "Dry Spell Max Length"):   
+            
+            index_y = xclim.indicators.atmos.dry_spell_max_length(loca2_daily()["pr"],
+                                                                 freq = 'YS')
+            index_y.values = np.where(mask_annual, np.nan, index_y)
+
+        elif (input.selected_index() == "Dry Spell Total Length"):   
+            
+            index_y = xclim.indicators.atmos.dry_spell_total_length(loca2_daily()["pr"],
+                                                                    freq = 'YS')
+            index_y.values = np.where(mask_annual, np.nan, index_y)
+
         elif (input.selected_index() == "Wet Spell Frequency"):   
             
             index_y = xclim.indicators.atmos.wet_spell_frequency(loca2_daily()["pr"], window=3, freq="YS")
             index_y.values = np.where(mask_annual,  np.nan, index_y)
+
+
+        elif (input.selected_index() == "Wet Spell Max Length"):   
+            
+            index_y = xclim.indicators.atmos.wet_spell_max_length(loca2_daily()["pr"],
+                                                                 freq = 'YS')
+            index_y.values = np.where(mask_annual, np.nan, index_y)
+
+        elif (input.selected_index() == "Wet Spell Total Length"):   
+            
+            index_y = xclim.indicators.atmos.wet_spell_total_length(loca2_daily()["pr"],
+                                                                    freq = 'YS')
+            index_y.values = np.where(mask_annual, np.nan, index_y)
 
         elif (input.selected_index() == "Heat Wave Frequency"):   
             
@@ -609,10 +634,35 @@ def server(input, output, session):
             index_m = xclim.indicators.atmos.dry_spell_frequency(loca2_daily()["pr"], window=3, freq="MS")
             index_m.values = np.where(mask_monthly, np.nan, index_m)
 
+        elif (input.selected_index() == "Dry Spell Max Length"):   
+            
+            index_m = xclim.indicators.atmos.dry_spell_max_length(loca2_daily()["pr"],
+                                                                 freq               =        'MS')
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+        elif (input.selected_index() == "Dry Spell Total Length"):   
+            
+            index_m = xclim.indicators.atmos.dry_spell_total_length(loca2_daily()["pr"],
+                                                                    freq = 'MS')
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+
         elif (input.selected_index() == "Wet Spell Frequency"):   
             
             index_m = xclim.indicators.atmos.wet_spell_frequency(loca2_daily()["pr"], window=3, freq="MS")
             index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+        elif (input.selected_index() == "Wet Spell Max Length"):   
+            
+            index_m = xclim.indicators.atmos.wet_spell_max_length(loca2_daily()["pr"],
+                                                                 freq               =        'MS')
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+        elif (input.selected_index() == "Wet Spell Total Length"):   
+            
+            index_m = xclim.indicators.atmos.wet_spell_total_length(loca2_daily()["pr"],
+                                                                    freq = 'MS')
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
 
         elif (input.selected_index() == "Heat Wave Frequency"):   
             
@@ -621,14 +671,14 @@ def server(input, output, session):
                                                                  freq               =        'MS')
             index_m.values = np.where(mask_monthly, np.nan, index_m)
 
-        elif (input.selected_index() == "Heat Wave Frequency Max Length"):   
+        elif (input.selected_index() == "Heat Wave Max Length"):   
             
             index_m = xclim.indicators.atmos.heat_wave_max_length(tasmin             = loca2_daily()["tasmin"], 
                                                                  tasmax             = loca2_daily()["tasmax"],
                                                                  freq               =        'MS')
             index_m.values = np.where(mask_monthly, np.nan, index_m)
 
-        elif (input.selected_index() == "Heat Wave Frequency Total Length"):   
+        elif (input.selected_index() == "Heat Wave Total Length"):   
             
             index_m = xclim.indicators.atmos.heat_wave_total_length(tasmin             = loca2_daily()["tasmin"], 
                                                                     tasmax             = loca2_daily()["tasmax"],
