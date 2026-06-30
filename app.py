@@ -445,14 +445,14 @@ def server(input, output, session):
                                                                  freq               =        'YS')
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
-        elif (input.selected_index() == "Heat Wave Frequency Max Length"):   
+        elif (input.selected_index() == "Heat Wave Max Length"):   
             
             index_y = xclim.indicators.atmos.heat_wave_max_length(tasmin             = loca2_daily()["tasmin"], 
                                                                  tasmax             = loca2_daily()["tasmax"],
                                                                  freq               =        'YS')
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
-        elif (input.selected_index() == "Heat Wave Frequency Total Length"):   
+        elif (input.selected_index() == "Heat Wave Total Length"):   
             
             index_y = xclim.indicators.atmos.heat_wave_total_length(tasmin             = loca2_daily()["tasmin"], 
                                                                     tasmax             = loca2_daily()["tasmax"],
