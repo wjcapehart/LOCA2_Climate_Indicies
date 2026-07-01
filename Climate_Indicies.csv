@@ -1,6 +1,7 @@
 ﻿selected_index,function,varname,units,Description
 Mean Temperature,"ds.tas.resample(time=""MS"").mean(dim=""time"")",tasavg,°C,Average Temperature
 Total Precipitation, xclim.indices.precip_accumulation,pr,mm,Total Precipitation
+Daily Temperature Range,xclim.indicators.atmos.daily_temperature_range,dtr,°C,Mean diurnal temperature range
 Simple Precip Intensity Index (SPII),xclim.indicators.atmos.daily_pr_intensity,sdii,mm/dy,Simple Daily Intensity Index (SDII) or average precipitation for days with daily precipitation over 1 mm.
 Dry Spell Frequency,xclim.indicators.atmos.dry_spell_frequency,dry_spell_frequency,# of periods,"The number of dry periods of 5 day or more, during which the total precipitation on a window of 3 day(s) is below 1 mm"
 Dry Spell Max Length,xclim.indicators.atmos.dry_spell_max_length,dry_spell_max_length,days,"Maximum consecutive number of days in a dry period, during which the total daily precipitation is under 1 mm."
@@ -14,6 +15,8 @@ Heat Wave Total Length,xclim.indicators.atmos.heat_wave_total_length,heat_wave_t
 7-day Anticedant Precipitation Index,xclim.indicators.atmos.antecedent_precipitation_index,api,mm,Weighted moving sum of daily precipitation totals with a 7-day window. Weights are an exponential decay of base 0.935.
 Cooling Degree Days,xclim.indicators.atmos.cooling_degree_days,cooling_degree_days,CDDs,Cumulative sum of temperature degrees for mean daily temperature above 65 °F
 Heating Degree Days,xclim.indicators.atmos.heating_degree_days,heating_degree_days,HDDs,Cumulative sum of temperature degrees for daily temperatures below 65 °F
+Growing Degree Days,xclim.indicators.atmos.growing_degree_days,growing_degree_days,GDDs,Cumulative sum of temperature degrees for mean daily temperature above 4 °C 
+Corn Heat Units,xclim.indicators.atmos.corn_heat_units,chu,CHUs,"Corn heat units (Tmin > 40 °F and Tmax > 50 °F, with additional attributes"
 Freeze-Thaw Days,xclim.indicators.atmos.daily_freezethaw_cycles,dlyfrzthw,days,Number of days where maximum daily temperatures are above freezing and minimum daily temperatures are at or below freezing
 Wetting Rain Days,xclim.indicators.atmos.days_over_precip_doy_thresh,days_over_precip_doy_thresh,days,Number of days with daily precipitation flux above the 95th daily percentile for the 1981-2010 period
 Cold and Dry Days,xclim.indicators.atmos.cold_and_dry_days,cold_and_dry_days,days,Number of days where temperature is below 5th daily percentile and precipitation is below 5th daily percentile for the 1981-2010 period

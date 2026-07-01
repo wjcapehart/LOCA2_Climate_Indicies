@@ -397,6 +397,13 @@ def server(input, output, session):
             index_y =  xclim.indices.precip_accumulation(loca2_daily()["pr"], freq="YS")
             index_y.values = np.where(mask_annual,  np.nan, index_y)
             index_y.name   = "pr"
+
+        if (input.selected_index() == "Daily Temperature Range"):
+            
+            index_y = xclim.indicators.atmos.daily_temperature_range(tasmin=loca2_daily()["tasmin"], 
+                                                                     tasmax=loca2_daily()["tasmax"], freq="YS")
+            index_y.values = np.where(mask_annual,  np.nan, index_y)
+
             
         if (input.selected_index() == "Simple Precip Intensity Index (SPII)"):
             
@@ -584,6 +591,19 @@ def server(input, output, session):
             index_y.values = np.where(mask_annual,  np.nan, index_y)
 
 
+        elif (input.selected_index() == "Growing Degree Days"):   
+            
+            index_y = xclim.indicators.atmos.growing_degree_days(tas   = loca2_daily()["tasavg"], freq =        'YS')
+            index_y.values = np.where(mask_annual, np.nan, index_y)
+
+
+        elif (input.selected_index() == "Corn Heat Units"):   
+            
+            index_y = xclim.indicators.atmos.corn_heat_units(tasmin   = loca2_daily()["tasmin"], tasmax   = loca2_daily()["tasmax"])
+            index_y = index_y.resample(time="YS").sum(dim="time")
+            index_y.values = np.where(mask_annual, np.nan, index_y)
+
+
         index_y["time"] = index_y.indexes['time'].to_datetimeindex(time_unit='us')
 
         index_y = index_y.to_dataframe().reset_index().dropna()
@@ -623,7 +643,15 @@ def server(input, output, session):
             index_m =  xclim.indices.precip_accumulation(loca2_daily()["pr"], freq="MS")
             index_m.values = np.where(mask_monthly,  np.nan, index_m)
             index_m.name   = "pr"
+
+        if (input.selected_index() == "Daily Temperature Range"):
             
+            index_m = xclim.indicators.atmos.daily_temperature_range(tasmin=loca2_daily()["tasmin"], 
+                                                                     tasmax=loca2_daily()["tasmax"], freq="MS")
+            index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+   
+
         if (input.selected_index() == "Simple Precip Intensity Index (SPII)"):
             
             index_m = xclim.indicators.atmos.daily_pr_intensity(loca2_daily()["pr"], freq="MS")
@@ -804,6 +832,25 @@ def server(input, output, session):
                                                                pr_per=pr_per, 
                                                                freq='MS')
             index_m.values = np.where(mask_monthly,  np.nan, index_m)
+
+
+
+        elif (input.selected_index() == "Growing Degree Days"):   
+            
+            index_m = xclim.indicators.atmos.growing_degree_days(tas   = loca2_daily()["tasavg"], freq =        'MS')
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+
+        elif (input.selected_index() == "Corn Heat Units"):   
+            
+            index_m = xclim.indicators.atmos.corn_heat_units(tasmin   = loca2_daily()["tasmin"], 
+                                                             tasmax   = loca2_daily()["tasmax"])
+            index_m = index_m.resample(time="MS").sum(dim="time")
+
+            index_m.values = np.where(mask_monthly, np.nan, index_m)
+
+
+
 
         index_m["time"] = index_m.indexes['time'].to_datetimeindex(time_unit='us')
 
