@@ -20,7 +20,6 @@ import urllib.request
 import socket
 from   xclim.core.calendar import percentile_doy, resample_doy
 
-
 from   shiny.types   import ImgData
 from   shiny         import reactive, App, render, ui  
 
@@ -198,7 +197,7 @@ app_ui = ui.page_sidebar(
 
         ui.card( 
 
-        ui.p("All plots are made to order from raw inputs and subsequent calculations. Please be patient."),
+        ui.p("All plots are made to order from raw daily inputs with subsequent calculations. Please be patient."),
         ui.p("New indicies are also slowly being added."),
     ),
 
@@ -242,10 +241,10 @@ app_ui = ui.page_sidebar(
 
         ui.card_header("About This Display"),
 
-        ui.p("This display shows a various climate metrics by US State Climate Divisions."),
+        ui.p("This display shows a various climate metrics by US State Climate Divisions.  The indicies include those developed for Expert Team on Climate Change Detection and Indices (ETCCDI) (), and Environment and Climate Change Canada (ECCC)."),
+        ui.markdown("""Climate Indicies were Calculated with the [xclim](https://xclim.readthedocs.io/en/stable/index.html) Python package developed by [Bourgault et al., 2023](https://doi.org/10.21105/joss.05415)."""),
 
-
-        ui.p("The data is erived from climate simulations from the CMIP6 Climate Model Ensembles ",
+        ui.p("The data is derived from climate simulations from the CMIP6 Climate Model Ensembles ",
              "and are a collection of the best simulations from each center's model participating in CMIP6."),
 
         ui.p("The output from these models were 'downscaled' from the global to regional scale using the ",
@@ -268,14 +267,17 @@ app_ui = ui.page_sidebar(
     ui.card(
         ui.card_header("Citations & References"),
 
-        ui.markdown("""Pierce, D.W., D.R. Cayan, D.R. Feldman, and M.D. Risser, 2023: Future Increases in North American Extreme Precipitation in CMIP6 Downscaled with LOCA, *Journal of Hydrometeorology*, **24**(5), 951-975, doi:[10.1175/JHM-D-22-0194.1](https://doi.org/10.1175/JHM-D-22-0194.1)."""),
+        ui.markdown("""Pierce, D.W., D.R. Cayan, D.R. Feldman, and M.D. Risser, 2023: Future increases in North American extreme precipitation in CMIP6 downscaled with LOCA, *Journal of Hydrometeorology*, **24**(5), 951-975, doi:[10.1175/JHM-D-22-0194.1](https://doi.org/10.1175/JHM-D-22-0194.1)."""),
+
+        ui.markdown("""Bourgault, P., et al. 2023: Xclim: Xarray-based climate data analytics, *Journal of Open Source Software*, **8**(85), 5415, doi:[10.21105/joss.05415](https://doi.org/10.21105/joss.05415)."""),
+        
 
     ),
 
   
 
       
-    title="CMIP6-LOCA2 Climate Indicies",
+    title="CMIP6-LOCA2 ETCCDI & ECCC Climate Indicies",
     lang="en",
 
 )
@@ -637,6 +639,8 @@ def server(input, output, session):
             index_m.values = np.where(mask_monthly,  np.nan, index_m)
             index_m.name   = "tasavg"
             index_m.values = index_m.values - 273.15
+            
+
 
         if (input.selected_index() == "Total Precipitation"):
             
@@ -928,6 +932,7 @@ def server(input, output, session):
         #
         # Create Monthly Plot
         #
+        print("Plotting Division", input.climdiv_selection())
         my_metadata = df_climdivs[df_climdivs["Climate_Division_Selector"]==input.climdiv_selection()]
 
 
